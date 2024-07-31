@@ -20,7 +20,7 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
-const createWindow = (): void => {
+const createWindow = (): BrowserWindow => {
   // Create the browser window.
   // Frame false removes the toolbars and menus around the rendered web page
   const mainWindow = new BrowserWindow({
@@ -39,18 +39,29 @@ const createWindow = (): void => {
   // Menu won't be shown anyway because it's a frameless window,
   // but removing just in case as a default menu is created and might have some random hotkeys we don't want
   Menu.setApplicationMenu(null);
+  return mainWindow;
+};
 
-  // Initialise components like tray item, clipping stack, interaction manager, menu, ketkey listener
-
+const createTrayItem = (): Tray => {
   // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
   trayItem = new Tray("icons/scissors_bw16.png");
+
   const contextMenu = Menu.buildFromTemplate([
     { label: "Exit tscut", id: "exit", type: "normal" },
   ]);
+
   contextMenu.addListener("menu-will-close", (event: Electron.Event) => {
     app.quit();
   });
+
   trayItem.setContextMenu(contextMenu);
+  return trayItem;
 };
 
-app.on("ready", createWindow);
+const onReady = (): void => {
+  // Initialise components like tray item, clipping stack, interaction manager, menu, ketkey listener
+  bezel = createWindow();
+  trayItem = createTrayItem();
+};
+
+app.on("ready", onReady);
