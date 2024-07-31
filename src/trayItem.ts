@@ -1,4 +1,4 @@
-import { app, Menu, Tray } from "electron";
+import { app, Menu, nativeImage, Tray } from "electron";
 
 export class TrayItem {
   private trayItem: Tray;
@@ -9,7 +9,8 @@ export class TrayItem {
 
   private createTrayItem(): void {
     // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
-    this.trayItem = new Tray("icons/scissors_bw16.png");
+    const icon = nativeImage.createFromPath("icons/jumpcut blue icon 32.png").resize({width: 30, height: 30, quality: "best"})
+    this.trayItem = new Tray(icon);
 
     const contextMenu = Menu.buildFromTemplate([
       { label: "Exit tscut", id: "exit", type: "normal" },
