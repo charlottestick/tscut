@@ -8,7 +8,7 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 // Component variable declarations
 let stack;
 let menu;
-let trayItem;
+let trayItem: Tray;
 let bezel;
 let hotkeyListeners;
 let hotkey;
@@ -44,17 +44,20 @@ const createWindow = (): BrowserWindow => {
 
 const createTrayItem = (): Tray => {
   // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
-  trayItem = new Tray("icons/scissors_bw16.png");
+  const trayItem = new Tray("icons/scissors_bw16.png");
 
   const contextMenu = Menu.buildFromTemplate([
     { label: "Exit tscut", id: "exit", type: "normal" },
   ]);
 
-  contextMenu.addListener("menu-will-close", (event: Electron.Event) => {
-    app.quit();
+  trayItem.setContextMenu(contextMenu);
+  trayItem.addListener("click", () => {
+    trayItem.popUpContextMenu();
   });
 
-  trayItem.setContextMenu(contextMenu);
+  contextMenu.getMenuItemById("exit").click = () => {
+    app.quit();
+  };
   return trayItem;
 };
 
