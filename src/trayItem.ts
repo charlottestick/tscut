@@ -3,24 +3,27 @@ import { app, Menu, MessagePortMain, nativeImage, Tray } from 'electron';
 export class TrayItem {
   private trayItem: Tray;
   private menu: Menu;
-  port: MessagePortMain
 
-  constructor(mainPort: MessagePortMain) {
+  constructor() {
     // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
     const icon = nativeImage
       .createFromPath('icons/jumpcut blue icon 32.png')
       .resize({ width: 30, height: 30, quality: 'best' });
     this.trayItem = new Tray(icon);
 
-    this.port = mainPort;
-
     this.menu = Menu.buildFromTemplate([
       {
         label: 'Debug',
         id: 'debug',
         submenu: [
-          { label: 'Show bezel', id: 'debugShow', click: () => this.port.postMessage('debugShow') },
-          { label: 'Hide bezel', id: 'debugHide', click: () => this.port.postMessage('debugHide') },
+          {
+            label: 'Show bezel',
+            id: 'debugShow'
+          },
+          {
+            label: 'Hide bezel',
+            id: 'debugHide'
+          },
         ],
       },
       { label: 'Exit tscut', id: 'exit' },
@@ -39,4 +42,9 @@ export class TrayItem {
       app.quit();
     };
   }
+
+  setDebugHandlers(handlers: { show: () => void; hide: () => void }): void {
+    this.menu.getMenuItemById('debugShow').click = handlers.show;
+    this.menu.getMenuItemById('debugHide').click = handlers.hide;
+  };
 }
