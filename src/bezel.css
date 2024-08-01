@@ -4,7 +4,6 @@ body {
   font-size: larger;
   font-weight: 600;
   margin: 0px;
-  max-width: 60rem;
   padding: 1rem;
 }
 
@@ -17,14 +16,15 @@ body {
 .section {
   margin: 1rem;
   padding: 1rem;
-  background-color: rgba(231, 231, 231, 0.801);
-  border-radius: 16px;
+  background-color: rgba(110, 110, 110, 0.9);
+  border-radius: 12px;
+  color: white;
 }
 
 #bezel {
   padding: inherit;
-  background-color: rgba(181, 181, 181, 0.902);
-  border-radius: 16px;
+  background-color: rgba(100, 100, 100, 0.7);
+  border-radius: 25px;
 }
 
 #clipping-content {
