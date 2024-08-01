@@ -25,6 +25,7 @@ body {
   padding: inherit;
   background-color: rgba(100, 100, 100, 0.7);
   border-radius: 25px;
+  box-shadow: 0px 0px 5px;
 }
 
 #clipping-content {
