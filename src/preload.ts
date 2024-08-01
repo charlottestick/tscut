@@ -3,15 +3,15 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
 // This type will move once the Clipping class is implemented
-export type Clipping = {
+export type ClippingDisplay = {
   stackNumber: string;
-  source: string;
-  timestamp: string;
   content: string;
+  source?: string;
+  timestamp?: string;
 };
 
 export type ClippingsApi = {
-  onShowClipping: (handler: (clipping: Clipping) => void) => void;
+  onShowClipping: (handler: (clipping: ClippingDisplay) => void) => void;
 };
 
 const clippingsApi: ClippingsApi = {

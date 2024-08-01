@@ -9,10 +9,9 @@ declare global {
 }
 
 window.clippings.onShowClipping((clipping) => {
-  console.log('showClipping message recieved with: ' + clipping);
   document.getElementById('stack-number').textContent = clipping.stackNumber;
+  document.getElementById('clipping-content').textContent = clipping.content;
   document.getElementById('clipping-source').textContent = clipping.source;
   document.getElementById('clipping-timestamp').textContent =
     clipping.timestamp;
-  document.getElementById('clipping-content').textContent = clipping.content;
 });
