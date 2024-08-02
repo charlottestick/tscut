@@ -2,7 +2,7 @@ export class Clipping {
   fullText: string;
   shortenedText: string;
   length: number;
-  private defaultLength = 40;
+  private defaultLength = 80;
 
   constructor(text: string) {
     this.fullText = text;
