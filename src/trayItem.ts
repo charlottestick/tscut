@@ -1,4 +1,4 @@
-import { app, Menu, MessagePortMain, nativeImage, Tray } from 'electron';
+import { app, Menu, nativeImage, Tray } from 'electron';
 
 export class TrayItem {
   private trayItem: Tray;
@@ -37,14 +37,14 @@ export class TrayItem {
     });
 
     // Menu item handlers
-    this.menu.getMenuItemById('exit').click = () => {
+    this.menu.getMenuItemById('exit')!.click = () => {
       this.trayItem.destroy();
       app.quit();
     };
   }
 
   setDebugHandlers(handlers: { show: () => void; hide: () => void }): void {
-    this.menu.getMenuItemById('debugShow').click = handlers.show;
-    this.menu.getMenuItemById('debugHide').click = handlers.hide;
+    this.menu.getMenuItemById('debugShow')!.click = handlers.show;
+    this.menu.getMenuItemById('debugHide')!.click = handlers.hide;
   };
 }

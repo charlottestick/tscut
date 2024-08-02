@@ -1,9 +1,9 @@
 import { globalShortcut } from 'electron';
 
 export class HotkeyListener {
-  constructor(showBezel: () => void) {
+  constructor(hotkeyHandler: () => void) {
     globalShortcut.register('Control+Alt+V', () => {
-      showBezel();
+      hotkeyHandler();
     });
   }
 }

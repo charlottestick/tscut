@@ -1,15 +1,15 @@
 import { clipboard } from 'electron';
 
 export class Clipboard {
-  private interval: number = 0.5;
+  private interval: number = 100;
   private changeCallback: () => void;
-  item: string;
+  item: string = '';
 
   constructor(changeCallback: () => void) {
     this.changeCallback = changeCallback;
     // Call our polling function repeatedly with the given interval in ms
     setInterval(() => {
-      this.pollClipboard;
+      this.pollClipboard();
     }, this.interval);
   }
 
@@ -21,6 +21,8 @@ export class Clipboard {
 
   fakeControlV(): void {
     // Simulate the user pressing control-v to paste into whatever they've selected after we put our clipping into the pasteboard
+    console.log('fakeControlV: ' + this.item);
+    
   }
 
   private pollClipboard(): void {
@@ -28,6 +30,7 @@ export class Clipboard {
     if (item !== this.item && item.length !== 0) {
       this.item = item;
       this.changeCallback();
+      console.log('Clipboard change with item: ' + this.item);
     }
   }
 
