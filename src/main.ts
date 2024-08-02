@@ -15,10 +15,9 @@ let hotkeyListener: HotkeyListener;
 let interactions: Interactions;
 let clipboard: Clipboard;
 
-  function onClipboardChange(): void {
-    console.log('Clipboard change callback');
-    stack.add(clipboard.item)
-  }
+function onClipboardChange(): void {
+  stack.add(clipboard.item)
+}
 
 class Tscut {
   onReady(): void {

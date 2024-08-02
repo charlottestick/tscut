@@ -47,7 +47,7 @@ export class Bezel {
   }
 
   show(): void {
-    this.bezel.restore()
+    // this.bezel.restore()
     this.bezel.show();
     this.shown = true;
   }

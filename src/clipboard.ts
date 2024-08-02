@@ -23,7 +23,6 @@ export class Clipboard {
 
   fakeControlV(): void {
     // Simulate the user pressing control-v to paste into whatever they've selected after we put our clipping into the pasteboard
-    console.log('fakeControlV: ' + this.item);
     keyTap('v', 'control')
   }
 
@@ -32,7 +31,6 @@ export class Clipboard {
     if (item !== this.item && item.length !== 0) {
       this.item = item;
       this.changeCallback();
-      console.log('Clipboard change with item: ' + this.item);
     }
   }
 
