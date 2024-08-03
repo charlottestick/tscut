@@ -5,6 +5,7 @@ import { HotkeyListener } from './hotkeyListener';
 import { ClippingStack } from './clippings';
 import { Interactions } from './interactions';
 import { Clipboard } from './clipboard';
+import { updateElectronApp } from 'update-electron-app';
 
 // Component declarations
 let stack: ClippingStack;
@@ -16,7 +17,7 @@ let interactions: Interactions;
 let clipboard: Clipboard;
 
 function onClipboardChange(): void {
-  stack.add(clipboard.item)
+  stack.add(clipboard.item);
 }
 
 class Tscut {
@@ -39,7 +40,7 @@ class Tscut {
       bezel: bezel,
       clipboard: clipboard,
     });
-    interactions.setKeyHandlers()
+    interactions.setKeyHandlers();
 
     hotkeyListener = new HotkeyListener(() => {
       if (!bezel.shown) {
@@ -53,9 +54,18 @@ class Tscut {
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// if (require('electron-squirrel-startup')) {
-//   app.quit();
-// }
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
+
+updateElectronApp({
+  updateInterval: '1 day',
+});
+
+app.setLoginItemSettings({ openAtLogin: true });
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+}
 
 const tscut = new Tscut();
 app.on('ready', tscut.onReady);

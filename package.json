@@ -9,6 +9,7 @@
     "email": "charlie.stick@btinternet.com"
   },
   "license": "MIT",
+  "repository": { "type": "git", "url": "github:charlottestick/tscut"},
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -19,7 +20,8 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1",
-    "robotjs": "^0.6.0"
+    "robotjs": "^0.6.0",
+    "update-electron-app": "^3.0.0"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",

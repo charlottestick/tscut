@@ -30,7 +30,7 @@ export class Interactions {
             this.displayBezelAtPosition(this.stack.position);
           }
         } else {
-          this.bezelKeyDownBehaviour(input.key)
+          this.bezelKeyDownBehaviour(input.key);
         }
       }
     });
@@ -88,7 +88,6 @@ export class Interactions {
     this.paste(clipping);
     this.stack.moveItemToTop(this.stack.position);
     this.stack.position = 0;
-    
   }
 
   displayBezelAtPosition(position: number): void {

@@ -10,15 +10,22 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
 import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
+import { join } from 'path';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
+    asar: false,
+    icon: join(__dirname, 'icons', 'jumpcut blue icon 256.png'),
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+    new MakerSquirrel({}),
+    new MakerZIP({}, ['darwin']),
+    new MakerRpm({}),
+    new MakerDeb({}),
+  ],
   plugins: [
-    new AutoUnpackNativesPlugin({}),
+    // new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
       mainConfig,
       renderer: {
@@ -44,9 +51,10 @@ const config: ForgeConfig = {
       [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
-      [FuseV1Options.OnlyLoadAppFromAsar]: true,
+      // [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
 };
 
 export default config;
+

@@ -87,7 +87,7 @@ export class ClippingStack {
   position: number = 0;
 
   constructor() {
-    this.store = new ClippingStore()
+    this.store = new ClippingStore();
   }
 
   get length() {
@@ -145,13 +145,13 @@ export class ClippingStack {
 
   move(steps: number): void {
     if (this.length <= 0) {
-      return
+      return;
     }
 
     if (steps > 0) {
-      this.position = Math.min(this.position + steps, this.length - 1)
+      this.position = Math.min(this.position + steps, this.length - 1);
     } else {
-      this.position = Math.max(0, this.position + steps)
+      this.position = Math.max(0, this.position + steps);
     }
   }
 

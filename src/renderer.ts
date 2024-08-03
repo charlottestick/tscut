@@ -11,7 +11,8 @@ declare global {
 window.clippings.onShowClipping((clipping) => {
   document.getElementById('stack-number')!.textContent = clipping.stackNumber;
   document.getElementById('clipping-content')!.textContent = clipping.content;
-  document.getElementById('clipping-source')!.textContent = clipping.source || null;
+  document.getElementById('clipping-source')!.textContent =
+    clipping.source || null;
   document.getElementById('clipping-timestamp')!.textContent =
     clipping.timestamp || null;
 });

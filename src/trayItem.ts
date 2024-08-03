@@ -1,4 +1,6 @@
-import { app, Menu, nativeImage, Tray } from 'electron';
+import { app, Menu, MenuItem, NativeImage, nativeImage, Tray } from 'electron';
+import iconUrl from './icons/jumpcut blue icon 32.png';
+import { join } from "path";
 
 export class TrayItem {
   private trayItem: Tray;
@@ -6,35 +8,40 @@ export class TrayItem {
 
   constructor() {
     // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
-    const icon = nativeImage
-      .createFromPath('icons/jumpcut blue icon 32.png')
-      .resize({ width: 30, height: 30, quality: 'best' });
+    let icon: NativeImage;
+    if (app.isPackaged) {
+      icon = nativeImage.createFromPath(join('resources/app/.webpack/main', iconUrl))
+    } else {
+      icon = nativeImage.createFromPath('src/icons/jumpcut blue icon 32.png');
+    }
+
     this.trayItem = new Tray(icon);
-
-    this.menu = Menu.buildFromTemplate([
-      {
-        label: 'Debug',
-        id: 'debug',
-        submenu: [
-          {
-            label: 'Show bezel',
-            id: 'debugShow'
-          },
-          {
-            label: 'Hide bezel',
-            id: 'debugHide'
-          },
-        ],
-      },
-      { label: 'Exit tscut', id: 'exit' },
-    ]);
-
-    this.trayItem.setContextMenu(this.menu);
-    this.trayItem.setTitle('tscut');
-
+    this.trayItem.setToolTip('tscut');
     this.trayItem.addListener('click', () => {
       this.trayItem.popUpContextMenu();
     });
+
+    this.menu = Menu.buildFromTemplate([{ label: 'Exit tscut', id: 'exit' }]);
+
+    if (!app.isPackaged) {
+      const debugMenu = new MenuItem({
+        label: 'Debug',
+        id: 'id',
+        submenu: [
+          {
+            label: 'Show bezel',
+            id: 'debugShow',
+          },
+          {
+            label: 'Hide bezel',
+            id: 'debugHide',
+          },
+        ],
+      });
+      this.menu.insert(0, debugMenu);
+    }
+
+    this.trayItem.setContextMenu(this.menu);
 
     // Menu item handlers
     this.menu.getMenuItemById('exit')!.click = () => {
@@ -44,7 +51,9 @@ export class TrayItem {
   }
 
   setDebugHandlers(handlers: { show: () => void; hide: () => void }): void {
-    this.menu.getMenuItemById('debugShow')!.click = handlers.show;
-    this.menu.getMenuItemById('debugHide')!.click = handlers.hide;
-  };
+    if (!app.isPackaged) {
+      this.menu.getMenuItemById('debugShow')!.click = handlers.show;
+      this.menu.getMenuItemById('debugHide')!.click = handlers.hide;
+    }
+  }
 }
