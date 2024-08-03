@@ -29,7 +29,7 @@ export const rules: Required<ModuleOptions>['rules'] = [
     },
   },
   {
-    test: /\.png/,
+    test: /\.(png|ico)$/i,
     type: 'asset/resource',
   },
 ];

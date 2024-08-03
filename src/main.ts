@@ -62,7 +62,9 @@ updateElectronApp({
   updateInterval: '1 day',
 });
 
-app.setLoginItemSettings({ openAtLogin: true });
+if (app.isPackaged) {
+  app.setLoginItemSettings({ openAtLogin: true });
+}
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 }

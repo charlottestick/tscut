@@ -16,5 +16,5 @@
       "*": ["node_modules/*"]
     }
   },
-  "include": ["src/**/*", "pngAsset.d.ts"]
+  "include": ["src/**/*", "webpackAssets.d.ts"]
 }
