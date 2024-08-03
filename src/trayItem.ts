@@ -46,6 +46,7 @@ export class TrayItem {
     // Menu item handlers
     this.menu.getMenuItemById('exit')!.click = () => {
       this.trayItem.destroy();
+      app.releaseSingleInstanceLock()
       app.quit();
     };
   }
