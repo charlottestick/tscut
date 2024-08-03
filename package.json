@@ -18,7 +18,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "publish": "dotenv -- electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
   "dependencies": {
@@ -41,6 +41,7 @@
     "@typescript-eslint/parser": "^5.62.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "css-loader": "^6.11.0",
+    "dotenv-cli": "^7.4.2",
     "electron": "31.3.1",
     "electron-rebuild": "^3.2.9",
     "eslint": "^8.57.0",
