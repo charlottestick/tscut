@@ -15,7 +15,7 @@ export class Bezel {
     // Create the browser window.
     // Frame false removes the toolbars and menus around the rendered web page
     this.bezel = new BrowserWindow({
-      height: 800,
+      height: 600,
       width: 800,
       frame: false,
       transparent: true,
@@ -31,6 +31,9 @@ export class Bezel {
 
     // and load the index.html of the app.
     this.bezel.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+    this.bezel.on('blur', () => {
+      this.hide();
+    });
 
     // Menu won't be shown anyway because it's a frameless window,
     // but removing just in case as a default menu is created and might have some random hotkeys we don't want
@@ -50,9 +53,10 @@ export class Bezel {
 
   show(): void {
     this.bezel.show();
-    const cursorDipPosition = screen.getCursorScreenPoint()
-    this.bezel.setPosition(cursorDipPosition.x, cursorDipPosition.y)
-    this.bezel.center()
+    const cursorDipPosition = screen.getCursorScreenPoint();
+    const closestDisplay = screen.getDisplayNearestPoint(cursorDipPosition);
+    this.bezel.setPosition(closestDisplay.bounds.x, closestDisplay.bounds.y);
+    this.bezel.center();
     this.shown = true;
   }
 
