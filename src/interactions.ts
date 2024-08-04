@@ -111,6 +111,8 @@ export class Interactions {
     };
 
     this.bezel.setText(clippingDisplay);
-    this.bezel.show();
+    if (!this.bezel.shown) {
+      this.bezel.show();
+    }
   }
 }
