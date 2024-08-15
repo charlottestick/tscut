@@ -80,14 +80,14 @@ export class Interactions {
   }
 
   bezelSelection(): void {
+    this.stack.moveItemToTop(this.stack.position);
+    this.stack.position = 0;
     const clipping = this.stack.itemAt(this.stack.position);
     if (clipping === undefined) {
       return;
     }
 
     this.paste(clipping);
-    this.stack.moveItemToTop(this.stack.position);
-    this.stack.position = 0;
   }
 
   displayBezelAtPosition(position: number): void {
