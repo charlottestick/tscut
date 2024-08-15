@@ -60,7 +60,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 updateElectronApp({
-  updateInterval: '1 day',
+  updateInterval: '4 hours',
 });
 
 if (app.isPackaged && !app.getLoginItemSettings().openAtLogin) {
