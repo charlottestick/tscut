@@ -6,7 +6,7 @@ import { ClippingStack } from './clippings';
 import { Interactions } from './interactions';
 import { Clipboard } from './clipboard';
 import { updateElectronApp } from 'update-electron-app';
-import path from 'node:path'
+import path from 'node:path';
 
 // Component declarations
 let stack: ClippingStack;

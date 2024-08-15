@@ -17,7 +17,7 @@ export class Clipping {
 
 class ClippingStore {
   private clippings: Clipping[] = [];
-  private _maxLength: number = 99;
+  private _maxLength: number = 30;
 
   get maxLength() {
     return this._maxLength;

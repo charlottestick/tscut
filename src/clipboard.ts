@@ -14,6 +14,14 @@ export class Clipboard {
     }, this.interval);
   }
 
+  private pollClipboard(): void {
+    let item = clipboard.readText().trim();
+    if (item !== this.item && item.length !== 0) {
+      this.item = item;
+      this.changeCallback();
+    }
+  }
+
   set(text: string): void {
     // Put our selected clipping into the pasteboard
     clipboard.writeText(text);
@@ -24,17 +32,5 @@ export class Clipboard {
     // Simulate the user pressing control-v to paste into whatever they've selected after we put our clipping into the pasteboard
     setKeyboardDelay(0);
     keyTap('v', 'control');
-  }
-
-  private pollClipboard(): void {
-    let item = clipboard.readText().trim();
-    if (item !== this.item && item.length !== 0) {
-      this.item = item;
-      this.changeCallback();
-    }
-  }
-
-  topItem(): string {
-    return clipboard.readText();
   }
 }
