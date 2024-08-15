@@ -1,7 +1,7 @@
 {
   "name": "tscut",
   "productName": "tscut",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Crossplatform reimplementation of Jumpcut using typescript and electron",
   "keywords": [],
   "author": {
