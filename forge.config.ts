@@ -17,7 +17,7 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({setupIcon: 'src/icons/jumpcut blue icon.ico'}),
+    new MakerSquirrel({ setupIcon: 'src/icons/jumpcut blue icon.ico' }),
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),
@@ -30,7 +30,7 @@ const config: ForgeConfig = {
           owner: 'charlottestick',
           name: 'tscut',
         },
-        draft: true
+        draft: true,
       },
     },
   ],

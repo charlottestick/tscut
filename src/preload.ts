@@ -18,4 +18,3 @@ const clippingsApi: ClippingsApi = {
 };
 
 contextBridge.exposeInMainWorld('clippings', clippingsApi);
-
