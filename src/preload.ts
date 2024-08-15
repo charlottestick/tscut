@@ -6,8 +6,6 @@ import { contextBridge, ipcRenderer } from 'electron';
 export type ClippingDisplay = {
   stackNumber: string;
   content: string;
-  source?: string;
-  timestamp?: string;
 };
 
 export type ClippingsApi = {
