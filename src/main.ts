@@ -6,6 +6,7 @@ import { ClippingStack } from './clippings';
 import { Interactions } from './interactions';
 import { Clipboard } from './clipboard';
 import { updateElectronApp } from 'update-electron-app';
+import path from 'node:path'
 
 // Component declarations
 let stack: ClippingStack;
@@ -63,7 +64,18 @@ updateElectronApp({
 });
 
 if (app.isPackaged && !app.getLoginItemSettings().openAtLogin) {
-  app.setLoginItemSettings({ openAtLogin: true });
+  const appFolder = path.dirname(process.execPath)
+  const updateExe = path.resolve(appFolder, '..', 'Update.exe')
+  const exeName = path.basename(process.execPath)
+
+  app.setLoginItemSettings({
+    openAtLogin: true,
+    path: updateExe,
+    args: [
+      '--processStart', `"${exeName}"`,
+      '--process-start-args', '"--hidden"'
+    ]
+  });
 }
 
 if (!app.requestSingleInstanceLock()) {
