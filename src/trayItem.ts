@@ -26,6 +26,7 @@ export class TrayItem {
     this.menu = Menu.buildFromTemplate([{ label: 'Exit tscut', id: 'exit' }]);
 
     if (!app.isPackaged) {
+      this.trayItem.setToolTip('tscut [dev]')
       const debugMenu = new MenuItem({
         label: 'Debug',
         id: 'id',

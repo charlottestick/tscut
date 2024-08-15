@@ -15,7 +15,7 @@ export class Clipboard {
   }
 
   private pollClipboard(): void {
-    let item = clipboard.readText().trim();
+    let item = clipboard.readText()
     if (item !== this.item && item.length !== 0) {
       this.item = item;
       this.changeCallback();
