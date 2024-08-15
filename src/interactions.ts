@@ -84,6 +84,7 @@ export class Interactions {
     this.stack.position = 0;
     const clipping = this.stack.itemAt(this.stack.position);
     if (clipping === undefined) {
+      this.bezel.hide();
       return;
     }
 
@@ -91,24 +92,27 @@ export class Interactions {
   }
 
   displayBezelAtPosition(position: number): void {
+    let clippingDisplay: ClippingDisplay;
+
     if (this.stack.isEmpty()) {
-      return;
-    }
+      // Show some message that the stack is empty
+      clippingDisplay = {
+        content: '',
+        stackNumber: '0 of 0',
+      };
+    } else {
+      const item = this.stack.itemAt(position);
+      if (item === undefined) {
+        return;
+      }
 
-    let item = this.stack.itemAt(position);
-    if (item === undefined) {
-      item = this.stack.itemAt(0);
+      const text = item.fullText;
+      const displayPosition = position + 1;
+      clippingDisplay = {
+        content: text,
+        stackNumber: displayPosition + ' of ' + this.stack.length,
+      };
     }
-    if (item === undefined) {
-      return;
-    }
-
-    const text = item.fullText;
-    const displayPosition = position + 1;
-    const clippingDisplay: ClippingDisplay = {
-      content: text,
-      stackNumber: displayPosition + ' of ' + this.stack.length,
-    };
 
     this.bezel.setText(clippingDisplay);
     if (!this.bezel.shown) {

@@ -47,7 +47,7 @@ class ClippingStore {
   moveItemToTop(position: number): void {
     if (
       this.clippings.length === 0 ||
-      position > this.clippings.length ||
+      position >= this.clippings.length ||
       position <= 0
     ) {
       return;
@@ -58,14 +58,14 @@ class ClippingStore {
   }
 
   itemAt(position: number): Clipping | undefined {
-    if (this.clippings.length === 0 || position > this.clippings.length) {
+    if (this.clippings.length === 0 || position >= this.clippings.length) {
       return;
     }
     return this.clippings[position];
   }
 
   removeItem(position: number): void {
-    if (this.clippings.length === 0 || position > this.clippings.length) {
+    if (this.clippings.length === 0 || position >= this.clippings.length) {
       return;
     }
     this.clippings.splice(position, 1);
