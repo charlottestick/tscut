@@ -21,7 +21,7 @@ class Tscut {
   private clipboard!: Clipboard;
 
   onReady(): void {
-    // Initialise components like tray item, clipping stack, interaction manager, menu, ketkey listener
+    // Initialise components like tray item, clipping stack, interaction manager, menu, hotkey listener
     this.bezel = new Bezel();
     this.stack = new ClippingStack();
     this.clipboard = new Clipboard(() => {
