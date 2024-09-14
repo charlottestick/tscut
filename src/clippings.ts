@@ -1,3 +1,6 @@
+import { app, safeStorage } from 'electron';
+import fs from 'node:fs';
+
 export class Clipping {
   fullText: string;
   shortenedText: string;
@@ -18,6 +21,12 @@ export class Clipping {
 class ClippingStore {
   private clippings: Clipping[] = [];
   private _maxLength: number = 30;
+  private persistPath: string
+
+  constructor() {
+    this.persistPath = app.getAppPath() + '/clippingStore';
+    this.readPersistedStore();
+  }
 
   get maxLength() {
     return this._maxLength;
@@ -34,10 +43,17 @@ class ClippingStore {
   }
 
   add(item: string): void {
+    this.clippings.forEach((clipping, index) => {
+      if (clipping.fullText === item) {
+        this.removeItem(index)
+      }
+    });
+
     this.clippings.unshift(new Clipping(item));
     if (this.clippings.length > this.maxLength) {
       this.clippings.pop();
     }
+    this.persistStore();
   }
 
   clear(): void {
@@ -55,6 +71,7 @@ class ClippingStore {
 
     const item = this.clippings.splice(position, 1)[0];
     this.clippings.unshift(item);
+    this.persistStore();
   }
 
   itemAt(position: number): Clipping | undefined {
@@ -69,6 +86,7 @@ class ClippingStore {
       return;
     }
     this.clippings.splice(position, 1);
+    this.persistStore();
   }
 
   firstItems(n: number): Clipping[] {
@@ -79,6 +97,63 @@ class ClippingStore {
       slice = this.clippings.slice(0, n);
     }
     return slice;
+  }
+
+  persistStore(): void {
+    if (this.clippings.length === 0) {
+      return;
+    }
+
+    const plaintextStore = this.clippings
+      .map((clipping) => {
+        return clipping.fullText;
+      })
+      .toString();
+
+    let encryptedStore: Buffer;
+    try {
+      encryptedStore = safeStorage.encryptString(plaintextStore);
+    } catch (e) {
+      console.log(
+        'Persistent clipping store encryption failed: ',
+        (e as Error).message
+      );
+      return;
+    }
+
+    fs.writeFile(this.persistPath, encryptedStore, (err) => {
+      if (err) {
+        console.log('Persistent clipping store write failed: ', err.message);
+      }
+    });
+  }
+
+  readPersistedStore(): void {
+    fs.readFile(this.persistPath, (err, encryptedStore) => {
+      if (err) {
+        console.log('Persistent clipping store read failed: ', err.message);
+        return;
+      }
+
+      if (encryptedStore.length === 0) {
+        return;
+      }
+
+      let plaintextStore: string;
+      try {
+        plaintextStore = safeStorage.decryptString(encryptedStore);
+      } catch (e) {
+        console.log(
+          'Persistent clipping store decryption failed: ',
+          (e as Error).message
+        );
+        return;
+      }
+
+      this.clippings = plaintextStore.split(',').map((item) => {
+        return new Clipping(item);
+      });
+    });
   }
 }
 
