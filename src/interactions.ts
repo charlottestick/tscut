@@ -16,9 +16,7 @@ export class Interactions {
     this.stack = inputs.stack;
     this.bezel = inputs.bezel;
     this.clipboard = inputs.clipboard;
-  }
 
-  setKeyHandlers(): void {
     this.bezel.setKeyHandler((_event, input) => {
       if (input.type === 'keyDown') {
         if (input.key === 'V') {
