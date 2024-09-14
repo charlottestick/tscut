@@ -8,47 +8,44 @@ import { Clipboard } from './clipboard';
 import { updateElectronApp } from 'update-electron-app';
 import path from 'node:path';
 
-// Component declarations
-let stack: ClippingStack;
-let menu;
-let trayItem: TrayItem;
-let bezel: Bezel;
-let hotkeyListener: HotkeyListener;
-let interactions: Interactions;
-let clipboard: Clipboard;
-
-function onClipboardChange(): void {
-  stack.add(clipboard.item);
-}
-
 class Tscut {
+  // Definite assignment assertions because some downstream electron APIs don't work until 'ready' event fires
+  // so we're creating and assigning objects in onReady instead of a constructor
+  // Could move some to a constructor as this only affets some electron APIs but it would have to be case by case
+  private stack!: ClippingStack;
+  // private menu;
+  private trayItem!: TrayItem;
+  private bezel!: Bezel;
+  private hotkeyListener!: HotkeyListener;
+  private interactions!: Interactions;
+  private clipboard!: Clipboard;
+
   onReady(): void {
     // Initialise components like tray item, clipping stack, interaction manager, menu, ketkey listener
-    bezel = new Bezel();
-    stack = new ClippingStack();
-    clipboard = new Clipboard(() => {
-      onClipboardChange();
+    this.bezel = new Bezel();
+    this.stack = new ClippingStack();
+    this.clipboard = new Clipboard(() => {
+      this.stack.add(this.clipboard.item);
     });
 
-    trayItem = new TrayItem();
-    trayItem.setDebugHandlers({
-      show: () => bezel.show(),
-      hide: () => bezel.hide(),
+    this.trayItem = new TrayItem();
+    this.trayItem.setDebugHandlers({
+      show: () => this.bezel.show(),
+      hide: () => this.bezel.hide(),
     });
 
-    interactions = new Interactions({
-      stack: stack,
-      bezel: bezel,
-      clipboard: clipboard,
+    this.interactions = new Interactions({
+      stack: this.stack,
+      bezel: this.bezel,
+      clipboard: this.clipboard,
     });
-    interactions.setKeyHandlers();
 
-    hotkeyListener = new HotkeyListener(() => {
-      if (!bezel.shown) {
-        interactions.displayBezelAtPosition(stack.position);
+    this.hotkeyListener = new HotkeyListener(() => {
+      if (!this.bezel.shown) {
+        this.interactions.displayBezelAtPosition(this.stack.position);
       } else {
-        stack.down();
-        interactions.displayBezelAtPosition(stack.position);
+        this.stack.down();
+        this.interactions.displayBezelAtPosition(this.stack.position);
       }
     });
   }
