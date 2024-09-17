@@ -24,7 +24,7 @@ class ClippingStore {
   private persistPath: string
 
   constructor() {
-    this.persistPath = app.getAppPath() + '/clippingStore';
+    this.persistPath = app.getPath('userData') + '/clippingStore';
     this.readPersistedStore();
   }
 
