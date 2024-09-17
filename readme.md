@@ -8,6 +8,6 @@ Press control-alt-v to open up the clipboard, use left & right or up & down to n
 
 ## Installing
 
-Go to the Releases section and download the tscut-x.x.x-Setup.exe file from the latest release (this will have the release's version instead of x.x.x)
+Download the tscut-setup.exe file from the latest release and run it.
 
-Once this has downloaded, run the setup file. It may need to be scanned by your anti-virus software and could show an error while this is happening, this error can be dismissed and won't affect the installation.
+It may need to be scanned by your anti-virus software and could show an error while this is happening, this error can be dismissed and won't affect the installation.
