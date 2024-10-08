@@ -260,7 +260,7 @@ export class ClippingStack {
     if (newPosition >= 0) {
       this.position = newPosition;
     } else if (this.wrapAround) {
-      this.position = this.length - 1
+      this.position = this.length - 1;
     }
   }
 
@@ -269,7 +269,7 @@ export class ClippingStack {
     if (newPosition < this.store.length) {
       this.position = newPosition;
     } else if (this.wrapAround) {
-      this.position = 0
+      this.position = 0;
     }
   }
 

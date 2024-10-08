@@ -1,4 +1,4 @@
-import { app, Menu, MenuItem } from 'electron';
+import { app } from 'electron';
 import { TrayItem } from './trayItem';
 import { Bezel } from './bezel';
 import { HotkeyListener } from './hotkeyListener';
@@ -15,7 +15,6 @@ class Tscut {
   private stack!: ClippingStack;
   private trayItem!: TrayItem;
   private bezel!: Bezel;
-  private hotkeyListener!: HotkeyListener;
   private interactions!: Interactions;
   private clipboard!: Clipboard;
 
@@ -68,23 +67,23 @@ class Tscut {
         type: 'checkbox',
         checked: true,
         click: (menuItem) => {
-          this.stack.wrapAround = menuItem.checked
-        }
+          this.stack.wrapAround = menuItem.checked;
+        },
       },
       {
         label: 'Hide on blur',
         type: 'checkbox',
         checked: true,
         click: (menuItem) => {
-          this.bezel.hideOnBlur = menuItem.checked
-        }
+          this.bezel.hideOnBlur = menuItem.checked;
+        },
       },
       {
         label: 'Show',
         click: () => {
-          this.bezel.show()
-        }
-      }
+          this.bezel.show();
+        },
+      },
     ]);
 
     this.interactions = new Interactions({
@@ -93,7 +92,7 @@ class Tscut {
       clipboard: this.clipboard,
     });
 
-    this.hotkeyListener = new HotkeyListener(() => {
+    new HotkeyListener(() => {
       if (!this.bezel.shown) {
         this.interactions.displayBezelAtPosition(this.stack.position);
       } else {
