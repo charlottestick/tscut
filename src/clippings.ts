@@ -35,7 +35,7 @@ class ClippingStore {
   set maxLength(value: number) {
     const valueOrMin = value < 10 ? 10 : value;
     this._maxLength = valueOrMin;
-    this.clippings = this.clippings.slice(0, this._maxLength);
+    this.limitLength()
   }
 
   get length(): number {
@@ -94,10 +94,8 @@ class ClippingStore {
   }
 
   firstItems(n: number): Clipping[] {
-    let slice: Clipping[];
-    if (n > this.length) {
-      slice = this.clippings;
-    } else {
+    let slice = this.clippings;
+    if (n < this.length) {
       slice = this.clippings.slice(0, n);
     }
     return slice;
@@ -177,7 +175,7 @@ export class ClippingStack {
   }
 
   isEmpty(): boolean {
-    return this.store.length === 0;
+    return this.length === 0;
   }
 
   firstItems(n: number): Clipping[] {
@@ -189,12 +187,12 @@ export class ClippingStack {
   }
 
   deleteAt(position: number): void {
-    if (position >= this.store.length) {
+    if (position >= this.length) {
       return;
     }
 
     this.store.removeItem(position);
-    if (this.store.length === 0) {
+    if (this.length === 0) {
       this.position = 0;
     } else if (this.position > 0 && this.position >= position) {
       this.position -= 1;
