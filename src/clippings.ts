@@ -140,11 +140,10 @@ class ClippingStore {
           return;
         }
 
-
-        const plaintextStore: string = safeStorage.decryptString(encryptedStore);
+        const plaintextStore: string =
+          safeStorage.decryptString(encryptedStore);
         this.clippings = JSON.parse(plaintextStore);
         this.limitLength();
-
       } catch (e) {
         console.log(
           'Persistent clipping store read failed: ',
@@ -171,7 +170,8 @@ class ClippingStore {
           return;
         }
 
-        const plaintextStore: string = safeStorage.decryptString(encryptedStore);
+        const plaintextStore: string =
+          safeStorage.decryptString(encryptedStore);
         const prettyJson = JSON.stringify(JSON.parse(plaintextStore), null, 2);
 
         const decryptedStorePath =
@@ -185,7 +185,6 @@ class ClippingStore {
             );
           }
         });
-
       } catch (e) {
         console.log(
           'Persistent clipping store decryption failed: ',
@@ -213,6 +212,7 @@ class ClippingStore {
 export class ClippingStack {
   store: ClippingStore;
   position: number = 0;
+  wrapAround: boolean = true;
 
   constructor() {
     this.store = new ClippingStore();
@@ -259,16 +259,18 @@ export class ClippingStack {
     const newPosition = this.position - 1;
     if (newPosition >= 0) {
       this.position = newPosition;
+    } else if (this.wrapAround) {
+      this.position = this.length - 1
     }
-    // Wraparound logic goes here if the setting is implemented
   }
 
   down(): void {
     const newPosition = this.position + 1;
     if (newPosition < this.store.length) {
       this.position = newPosition;
+    } else if (this.wrapAround) {
+      this.position = 0
     }
-    // Wraparound logic goes here if the setting is implemented
   }
 
   move(steps: number): void {

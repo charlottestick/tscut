@@ -47,16 +47,14 @@ export class TrayItem {
     this.trayItem.setContextMenu(this.menu);
   }
 
-  createDebugMenu(submenu: MenuItemConstructorOptions[]): void {
+  createDebugMenu(debugMenu: MenuItemConstructorOptions[]): void {
     if (app.isPackaged) {
       return;
     }
 
-    const debugMenu = new MenuItem({
-      label: 'Debug',
-      id: 'debugMenu',
-      submenu,
+    debugMenu.forEach((template, index) => {
+      const menuItem = new MenuItem(template);
+      this.menu.insert(index, menuItem);
     });
-    this.menu.insert(0, debugMenu);
   }
 }

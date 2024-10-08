@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, Menu, MenuItem } from 'electron';
 import { TrayItem } from './trayItem';
 import { Bezel } from './bezel';
 import { HotkeyListener } from './hotkeyListener';
@@ -63,6 +63,14 @@ class Tscut {
           },
         ],
       },
+      {
+        label: 'Wraparound',
+        type: 'checkbox',
+        checked: true,
+        click: (menuItem) => {
+          this.stack.wrapAround = menuItem.checked
+        }
+      }
     ]);
 
     this.interactions = new Interactions({
