@@ -23,13 +23,12 @@ class ClippingStore {
   private clippings: Clipping[] = [];
   private _maxStoreLength: number = 30;
   persistPath: string;
+  debugPersistPath: string;
 
   constructor() {
-    const persistFilename = app.isPackaged
-      ? '/clippingStore'
-      : '/debugClippingStore';
-    this.persistPath = app.getPath('userData') + persistFilename;
-    this.readPersistedStore();
+    this.persistPath = app.getPath('userData') + '/clippingStore';
+    this.debugPersistPath = app.getPath('userData') + '/debugClippingStore';
+    this.readPersistentStore(!app.isPackaged);
   }
 
   get maxStoreLength() {
@@ -61,7 +60,7 @@ class ClippingStore {
 
     this.clippings.unshift(new Clipping(item));
     this.limitLength();
-    this.persistStore();
+    this.persistStore(!app.isPackaged);
   }
 
   clear(): void {
@@ -101,7 +100,9 @@ class ClippingStore {
     return slice;
   }
 
-  private persistStore(): void {
+  private persistStore(useDebugStore: boolean = false): void {
+    const path = useDebugStore ? this.debugPersistPath : this.persistPath;
+
     if (this.length === 0) {
       return;
     }
@@ -119,92 +120,98 @@ class ClippingStore {
       return;
     }
 
-    fs.writeFile(this.persistPath, encryptedStore, (err) => {
+    fs.writeFile(path, encryptedStore, (err) => {
       if (err) {
         console.log('Persistent clipping store write failed: ', err.message);
       }
     });
   }
 
-  private readPersistedStore(): void {
-    fs.readFile(this.persistPath, (err, encryptedStore: Buffer) => {
-      if (err) {
-        console.log('Persistent clipping store read failed: ', err.message);
-        return;
-      }
+  private readPersistentStore(useDebugStore: boolean = false): void {
+    const path = useDebugStore ? this.debugPersistPath : this.persistPath;
 
-      if (encryptedStore.length === 0) {
-        return;
-      }
-
-      let plaintextStore: string;
+    fs.readFile(path, (err, encryptedStore: Buffer) => {
       try {
-        plaintextStore = safeStorage.decryptString(encryptedStore);
-      } catch (e) {
-        console.log(
-          'Persistent clipping store decryption failed: ',
-          (e as Error).message
-        );
-        return;
-      }
+        if (err) {
+          throw err;
+        }
 
-      try {
+        if (encryptedStore.length === 0) {
+          return;
+        }
+
+
+        const plaintextStore: string = safeStorage.decryptString(encryptedStore);
         this.clippings = JSON.parse(plaintextStore);
         this.limitLength();
+
       } catch (e) {
         console.log(
-          'Persistent clipping store JSON parse failed: ',
+          'Persistent clipping store read failed: ',
           (e as Error).message
         );
-        return;
       }
     });
   }
 
-  decryptPersistedStore(): void {
+  decryptPersistentStore(useDebugStore: boolean = false): void {
     if (app.isPackaged) {
       return;
     }
 
-    fs.readFile(this.persistPath, (err, encryptedStore: Buffer) => {
-      if (err) {
-        console.log('Persistent clipping store read failed: ', err.message);
-        return;
-      }
+    const path = useDebugStore ? this.debugPersistPath : this.persistPath;
 
-      if (encryptedStore.length === 0) {
-        return;
-      }
-
-      let plaintextStore: string;
+    fs.readFile(path, (err, encryptedStore: Buffer) => {
       try {
-        plaintextStore = safeStorage.decryptString(encryptedStore);
+        if (err) {
+          throw err;
+        }
+
+        if (encryptedStore.length === 0) {
+          return;
+        }
+
+        const plaintextStore: string = safeStorage.decryptString(encryptedStore);
+        const prettyJson = JSON.stringify(JSON.parse(plaintextStore), null, 2);
+
+        const decryptedStorePath =
+          app.getAppPath() + '/decryptedClippingStore.json';
+
+        fs.writeFile(decryptedStorePath, prettyJson, (err) => {
+          if (err) {
+            console.log(
+              'Decrypted persistent clipping store write failed: ',
+              err.message
+            );
+          }
+        });
+
       } catch (e) {
         console.log(
           'Persistent clipping store decryption failed: ',
           (e as Error).message
         );
-        return;
       }
-
-      const prettyJson = JSON.stringify(JSON.parse(plaintextStore), null, 2);
-
-      const decryptedStorePath =
-        app.getAppPath() + '/decryptedClippingStore.json';
-      fs.writeFile(decryptedStorePath, prettyJson, (err) => {
-        if (err) {
-          console.log(
-            'Decrypted persistent clipping store write failed: ',
-            err.message
-          );
-        }
-      });
     });
+  }
+
+  resetPersistentStore(useDebugStore: boolean = false): void {
+    if (app.isPackaged) {
+      return;
+    }
+    const path = useDebugStore ? this.debugPersistPath : this.persistPath;
+
+    fs.rm(path, (err) => {
+      if (err) {
+        console.log('Delete persistent clipping store failed: ', err.message);
+      }
+    });
+    this.persistStore(useDebugStore);
   }
 }
 
 export class ClippingStack {
-  private store: ClippingStore;
+  store: ClippingStore;
   position: number = 0;
 
   constructor() {
@@ -282,9 +289,5 @@ export class ClippingStack {
 
   moveItemToTop(position: number): void {
     this.store.moveItemToTop(position);
-  }
-
-  decryptPersistedStore(): void {
-    this.store.decryptPersistedStore();
   }
 }

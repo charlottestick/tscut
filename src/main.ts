@@ -31,9 +31,37 @@ class Tscut {
     this.trayItem.createDebugMenu([
       {
         label: 'Decrypt persistent storage',
-        click: () => {
-          this.stack.decryptPersistedStore();
-        },
+        submenu: [
+          {
+            label: 'Debug store',
+            click: () => {
+              this.stack.store.decryptPersistentStore(true);
+            },
+          },
+          {
+            label: 'Prod store',
+            click: () => {
+              this.stack.store.decryptPersistentStore(false);
+            },
+          },
+        ],
+      },
+      {
+        label: 'Reset persistent storage',
+        submenu: [
+          {
+            label: 'Debug store',
+            click: () => {
+              this.stack.store.resetPersistentStore(true);
+            },
+          },
+          {
+            label: 'Prod store',
+            click: () => {
+              this.stack.store.resetPersistentStore(false);
+            },
+          },
+        ],
       },
     ]);
 
