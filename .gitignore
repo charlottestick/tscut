@@ -91,5 +91,5 @@ typings/
 # Electron-Forge
 out/
 
-# tscut persistence
-clippingStore
+# tscut debug
+decryptedClippingStore.json

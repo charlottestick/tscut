@@ -13,7 +13,6 @@ class Tscut {
   // so we're creating and assigning objects in onReady instead of a constructor
   // Could move some to a constructor as this only affets some electron APIs but it would have to be case by case
   private stack!: ClippingStack;
-  // private menu;
   private trayItem!: TrayItem;
   private bezel!: Bezel;
   private hotkeyListener!: HotkeyListener;
@@ -29,10 +28,14 @@ class Tscut {
     });
 
     this.trayItem = new TrayItem();
-    this.trayItem.setDebugHandlers({
-      show: () => this.bezel.show(),
-      hide: () => this.bezel.hide(),
-    });
+    this.trayItem.createDebugMenu([
+      {
+        label: 'Decrypt persistent storage',
+        click: () => {
+          this.stack.decryptPersistedStore();
+        },
+      },
+    ]);
 
     this.interactions = new Interactions({
       stack: this.stack,

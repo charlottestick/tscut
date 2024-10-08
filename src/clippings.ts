@@ -4,38 +4,42 @@ import fs from 'node:fs';
 export class Clipping {
   fullText: string;
   shortenedText: string;
-  length: number;
-  private defaultLength = 80;
 
-  constructor(text: string) {
+  constructor(text: string, length: number = 80) {
     this.fullText = text;
-    this.length = this.defaultLength;
-    this.shortenedText = this.fullText.trim();
+    this.shortenedText = text.trim();
     this.shortenedText = this.shortenedText.split('/n')[0];
-    if (this.shortenedText.length > this.length) {
-      this.shortenedText = this.shortenedText.slice(0, this.length) + '…';
+    this.shortenText(length);
+  }
+
+  shortenText(length: number) {
+    if (this.shortenedText.length > length) {
+      this.shortenedText = this.shortenedText.slice(0, length) + '…';
     }
   }
 }
 
 class ClippingStore {
   private clippings: Clipping[] = [];
-  private _maxLength: number = 30;
-  private persistPath: string;
+  private _maxStoreLength: number = 30;
+  persistPath: string;
 
   constructor() {
-    this.persistPath = app.getPath('userData') + '/clippingStore';
+    const persistFilename = app.isPackaged
+      ? '/clippingStore'
+      : '/debugClippingStore';
+    this.persistPath = app.getPath('userData') + persistFilename;
     this.readPersistedStore();
   }
 
-  get maxLength() {
-    return this._maxLength;
+  get maxStoreLength() {
+    return this._maxStoreLength;
   }
 
-  set maxLength(value: number) {
+  set maxStoreLength(value: number) {
     const valueOrMin = value < 10 ? 10 : value;
-    this._maxLength = valueOrMin;
-    this.limitLength()
+    this._maxStoreLength = valueOrMin;
+    this.limitLength();
   }
 
   get length(): number {
@@ -43,8 +47,8 @@ class ClippingStore {
   }
 
   private limitLength(): void {
-    if (this.length > this.maxLength) {
-      this.clippings = this.clippings.slice(0, this.maxLength)
+    if (this.length > this.maxStoreLength) {
+      this.clippings = this.clippings.slice(0, this.maxStoreLength);
     }
   }
 
@@ -56,7 +60,7 @@ class ClippingStore {
     });
 
     this.clippings.unshift(new Clipping(item));
-    this.limitLength()
+    this.limitLength();
     this.persistStore();
   }
 
@@ -65,11 +69,7 @@ class ClippingStore {
   }
 
   moveItemToTop(position: number): void {
-    if (
-      this.length === 0 ||
-      position >= this.length ||
-      position <= 0
-    ) {
+    if (this.length === 0 || position >= this.length || position <= 0) {
       return;
     }
 
@@ -150,7 +150,7 @@ class ClippingStore {
 
       try {
         this.clippings = JSON.parse(plaintextStore);
-        this.limitLength()
+        this.limitLength();
       } catch (e) {
         console.log(
           'Persistent clipping store JSON parse failed: ',
@@ -158,6 +158,47 @@ class ClippingStore {
         );
         return;
       }
+    });
+  }
+
+  decryptPersistedStore(): void {
+    if (app.isPackaged) {
+      return;
+    }
+
+    fs.readFile(this.persistPath, (err, encryptedStore: Buffer) => {
+      if (err) {
+        console.log('Persistent clipping store read failed: ', err.message);
+        return;
+      }
+
+      if (encryptedStore.length === 0) {
+        return;
+      }
+
+      let plaintextStore: string;
+      try {
+        plaintextStore = safeStorage.decryptString(encryptedStore);
+      } catch (e) {
+        console.log(
+          'Persistent clipping store decryption failed: ',
+          (e as Error).message
+        );
+        return;
+      }
+
+      const prettyJson = JSON.stringify(JSON.parse(plaintextStore), null, 2);
+
+      const decryptedStorePath =
+        app.getAppPath() + '/decryptedClippingStore.json';
+      fs.writeFile(decryptedStorePath, prettyJson, (err) => {
+        if (err) {
+          console.log(
+            'Decrypted persistent clipping store write failed: ',
+            err.message
+          );
+        }
+      });
     });
   }
 }
@@ -241,5 +282,9 @@ export class ClippingStack {
 
   moveItemToTop(position: number): void {
     this.store.moveItemToTop(position);
+  }
+
+  decryptPersistedStore(): void {
+    this.store.decryptPersistedStore();
   }
 }
