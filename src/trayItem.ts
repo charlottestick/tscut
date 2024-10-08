@@ -1,4 +1,12 @@
-import { app, Menu, MenuItem, NativeImage, nativeImage, Tray } from 'electron';
+import {
+  app,
+  Menu,
+  MenuItem,
+  MenuItemConstructorOptions,
+  NativeImage,
+  nativeImage,
+  Tray,
+} from 'electron';
 import iconUrl from './icons/jumpcut blue icon 32.png';
 import { join } from 'path';
 
@@ -18,47 +26,37 @@ export class TrayItem {
     }
 
     this.trayItem = new Tray(icon);
-    this.trayItem.setToolTip('tscut');
+    let tooltip = app.isPackaged ? 'tscut [dev]' : 'tscut';
+    this.trayItem.setToolTip(tooltip);
     this.trayItem.addListener('click', () => {
       this.trayItem.popUpContextMenu();
     });
 
-    this.menu = Menu.buildFromTemplate([{ label: 'Exit tscut', id: 'exit' }]);
-
-    if (!app.isPackaged) {
-      this.trayItem.setToolTip('tscut [dev]')
-      const debugMenu = new MenuItem({
-        label: 'Debug',
-        id: 'id',
-        submenu: [
-          {
-            label: 'Show bezel',
-            id: 'debugShow',
-          },
-          {
-            label: 'Hide bezel',
-            id: 'debugHide',
-          },
-        ],
-      });
-      this.menu.insert(0, debugMenu);
-    }
+    this.menu = Menu.buildFromTemplate([
+      {
+        label: 'Exit tscut',
+        click: () => {
+          this.trayItem.destroy();
+          app.releaseSingleInstanceLock();
+          app.setLoginItemSettings({ openAtLogin: false });
+          app.quit();
+        },
+      },
+    ]);
 
     this.trayItem.setContextMenu(this.menu);
-
-    // Menu item handlers
-    this.menu.getMenuItemById('exit')!.click = () => {
-      this.trayItem.destroy();
-      app.releaseSingleInstanceLock();
-      app.setLoginItemSettings({ openAtLogin: false });
-      app.quit();
-    };
   }
 
-  setDebugHandlers(handlers: { show: () => void; hide: () => void }): void {
-    if (!app.isPackaged) {
-      this.menu.getMenuItemById('debugShow')!.click = handlers.show;
-      this.menu.getMenuItemById('debugHide')!.click = handlers.hide;
+  createDebugMenu(submenu: MenuItemConstructorOptions[]): void {
+    if (app.isPackaged) {
+      return;
     }
+
+    const debugMenu = new MenuItem({
+      label: 'Debug',
+      id: 'debugMenu',
+      submenu,
+    });
+    this.menu.insert(0, debugMenu);
   }
 }
