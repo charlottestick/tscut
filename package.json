@@ -15,7 +15,8 @@
   },
   "main": ".webpack/main",
   "scripts": {
-    "start": "electron-forge start",
+    "dev": "electron-forge start",
+    "start": "npm run dev",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "dotenv -- electron-forge publish",
