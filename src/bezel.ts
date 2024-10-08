@@ -10,6 +10,7 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 export class Bezel {
   private bezel: BrowserWindow;
   shown: boolean = false;
+  hideOnBlur: boolean = true;
 
   constructor() {
     // Create the browser window.
@@ -32,7 +33,9 @@ export class Bezel {
     // and load the index.html of the app.
     this.bezel.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
     this.bezel.on('blur', () => {
-      this.hide();
+      if (this.hideOnBlur) {
+        this.hide();
+      }
     });
 
     // Menu won't be shown anyway because it's a frameless window,

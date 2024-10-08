@@ -70,6 +70,20 @@ class Tscut {
         click: (menuItem) => {
           this.stack.wrapAround = menuItem.checked
         }
+      },
+      {
+        label: 'Hide on blur',
+        type: 'checkbox',
+        checked: true,
+        click: (menuItem) => {
+          this.bezel.hideOnBlur = menuItem.checked
+        }
+      },
+      {
+        label: 'Show',
+        click: () => {
+          this.bezel.show()
+        }
       }
     ]);
 

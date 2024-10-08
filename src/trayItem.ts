@@ -26,7 +26,7 @@ export class TrayItem {
     }
 
     this.trayItem = new Tray(icon);
-    let tooltip = app.isPackaged ? 'tscut [dev]' : 'tscut';
+    let tooltip = app.isPackaged ? 'tscut' : 'tscut [dev]';
     this.trayItem.setToolTip(tooltip);
     this.trayItem.addListener('click', () => {
       this.trayItem.popUpContextMenu();
