@@ -21,7 +21,7 @@ export class Clipping {
 class ClippingStore {
   private clippings: Clipping[] = [];
   private _maxLength: number = 30;
-  private persistPath: string
+  private persistPath: string;
 
   constructor() {
     this.persistPath = app.getPath('userData') + '/clippingStore';
@@ -34,25 +34,29 @@ class ClippingStore {
 
   set maxLength(value: number) {
     const valueOrMin = value < 10 ? 10 : value;
-    this.clippings = this.clippings.slice(0, valueOrMin);
     this._maxLength = valueOrMin;
+    this.clippings = this.clippings.slice(0, this._maxLength);
   }
 
   get length(): number {
     return this.clippings.length;
   }
 
+  private limitLength(): void {
+    if (this.length > this.maxLength) {
+      this.clippings = this.clippings.slice(0, this.maxLength)
+    }
+  }
+
   add(item: string): void {
     this.clippings.forEach((clipping, index) => {
       if (clipping.fullText === item) {
-        this.removeItem(index)
+        this.removeItem(index);
       }
     });
 
     this.clippings.unshift(new Clipping(item));
-    if (this.clippings.length > this.maxLength) {
-      this.clippings.pop();
-    }
+    this.limitLength()
     this.persistStore();
   }
 
@@ -62,8 +66,8 @@ class ClippingStore {
 
   moveItemToTop(position: number): void {
     if (
-      this.clippings.length === 0 ||
-      position >= this.clippings.length ||
+      this.length === 0 ||
+      position >= this.length ||
       position <= 0
     ) {
       return;
@@ -75,14 +79,14 @@ class ClippingStore {
   }
 
   itemAt(position: number): Clipping | undefined {
-    if (this.clippings.length === 0 || position >= this.clippings.length) {
+    if (this.length === 0 || position >= this.length) {
       return;
     }
     return this.clippings[position];
   }
 
   removeItem(position: number): void {
-    if (this.clippings.length === 0 || position >= this.clippings.length) {
+    if (this.length === 0 || position >= this.length) {
       return;
     }
     this.clippings.splice(position, 1);
@@ -91,7 +95,7 @@ class ClippingStore {
 
   firstItems(n: number): Clipping[] {
     let slice: Clipping[];
-    if (n > this.clippings.length) {
+    if (n > this.length) {
       slice = this.clippings;
     } else {
       slice = this.clippings.slice(0, n);
@@ -99,16 +103,12 @@ class ClippingStore {
     return slice;
   }
 
-  persistStore(): void {
-    if (this.clippings.length === 0) {
+  private persistStore(): void {
+    if (this.length === 0) {
       return;
     }
 
-    const plaintextStore = this.clippings
-      .map((clipping) => {
-        return clipping.fullText;
-      })
-      .toString();
+    const plaintextStore: string = JSON.stringify(this.clippings);
 
     let encryptedStore: Buffer;
     try {
@@ -128,8 +128,8 @@ class ClippingStore {
     });
   }
 
-  readPersistedStore(): void {
-    fs.readFile(this.persistPath, (err, encryptedStore) => {
+  private readPersistedStore(): void {
+    fs.readFile(this.persistPath, (err, encryptedStore: Buffer) => {
       if (err) {
         console.log('Persistent clipping store read failed: ', err.message);
         return;
@@ -150,9 +150,16 @@ class ClippingStore {
         return;
       }
 
-      this.clippings = plaintextStore.split(',').map((item) => {
-        return new Clipping(item);
-      });
+      try {
+        this.clippings = JSON.parse(plaintextStore);
+        this.limitLength()
+      } catch (e) {
+        console.log(
+          'Persistent clipping store JSON parse failed: ',
+          (e as Error).message
+        );
+        return;
+      }
     });
   }
 }
