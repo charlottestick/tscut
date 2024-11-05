@@ -1,6 +1,6 @@
 # tscut
 
-A windows clipboard manager based on Jumpcut & Flycut
+A windows & linux clipboard manager based on Jumpcut & Flycut
 
 ![image](./tscut.png)
 
@@ -10,6 +10,10 @@ Press control-alt-v to open up the clipboard, use left & right or up & down to n
 
 ## Installing
 
+### Windows
 Download the tscut-setup.exe file from the latest release and run it.
 
 It may need to be scanned by your anti-virus software and could show an error while this is happening, this error can be dismissed and won't affect the installation.
+
+### Linux
+Download the .deb file and run it
