@@ -3,8 +3,6 @@ import {
   Menu,
   MenuItem,
   MenuItemConstructorOptions,
-  NativeImage,
-  nativeImage,
   Tray,
 } from 'electron';
 import iconUrl from './icons/jumpcut blue icon 32.png';
@@ -16,13 +14,11 @@ export class TrayItem {
 
   constructor() {
     // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
-    let icon: NativeImage;
+    let icon: string;
     if (app.isPackaged) {
-      icon = nativeImage.createFromPath(
-        join('resources/app/.webpack/main', iconUrl)
-      );
+      icon = join(app.getAppPath(), '.webpack/main', iconUrl)
     } else {
-      icon = nativeImage.createFromPath('src/icons/jumpcut blue icon 32.png');
+      icon = 'src/icons/jumpcut blue icon 32.png';
     }
 
     this.trayItem = new Tray(icon);

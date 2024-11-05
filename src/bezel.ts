@@ -14,7 +14,7 @@ export class Bezel {
 
   constructor() {
     // Handle running in the background with no taskbar item for different platforms
-    let skipTaskbar = process.platform === 'win32' ? true : false
+    let skipTaskbar = process.platform === 'win32'
     let type = process.platform === 'linux' ? 'dock': undefined
 
     // Create the browser window.

@@ -103,33 +103,38 @@ class Tscut {
   }
 }
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
+if (process.platform === 'win32') {
+  // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+  if (require('electron-squirrel-startup')) {
+    app.quit();
+  }
 
-updateElectronApp({
-  updateInterval: '4 hours',
-});
-
-if (app.isPackaged && !app.getLoginItemSettings().openAtLogin) {
-  const appFolder = path.dirname(process.execPath);
-  const updateExe = path.resolve(appFolder, '..', 'Update.exe');
-  const exeName = path.basename(process.execPath);
-
-  app.setLoginItemSettings({
-    openAtLogin: true,
-    path: updateExe,
-    args: [
-      '--processStart',
-      `"${exeName}"`,
-      '--process-start-args',
-      '"--hidden"',
-    ],
+  updateElectronApp({
+    updateInterval: '4 hours',
   });
+
+  // Login items API isn't available on linux, but can be set manually by the user in their settings
+  if (app.isPackaged && !app.getLoginItemSettings().openAtLogin) {
+    const appFolder = path.dirname(process.execPath);
+    const updateExe = path.resolve(appFolder, '..', 'Update.exe');
+    const exeName = path.basename(process.execPath);
+
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      path: updateExe,
+      args: [
+        '--processStart',
+        `"${exeName}"`,
+        '--process-start-args',
+        '"--hidden"',
+      ],
+    });
+  }
 }
+
 
 if (!app.requestSingleInstanceLock()) {
+  console.log('Already running another instance');
   app.quit();
 }
 

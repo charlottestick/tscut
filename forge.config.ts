@@ -17,8 +17,7 @@ const config: ForgeConfig = {
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({ setupIcon: 'src/icons/jumpcut blue icon.ico', setupExe: 'tscut-setup.exe' }),
-    new MakerRpm({}),
-    new MakerDeb({}),
+    new MakerDeb({ options: { icon: 'src/icons/jumpcut blue icon 256.png', categories: ['Utility', 'Development'] }}),
   ],
   publishers: [
     {
