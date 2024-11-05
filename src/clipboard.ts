@@ -1,5 +1,5 @@
 import { clipboard } from 'electron';
-import { keyTap, setKeyboardDelay } from 'robotjs';
+import { keyTap, setKeyboardDelay } from '@jitsi/robotjs';
 
 export class Clipboard {
   private interval: number = 500;

@@ -13,6 +13,10 @@ export class Bezel {
   hideOnBlur: boolean = true;
 
   constructor() {
+    // Handle running in the background with no taskbar item for different platforms
+    let skipTaskbar = process.platform === 'win32' ? true : false
+    let type = process.platform === 'linux' ? 'dock': undefined
+
     // Create the browser window.
     // Frame false removes the toolbars and menus around the rendered web page
     this.bezel = new BrowserWindow({
@@ -20,9 +24,10 @@ export class Bezel {
       width: 800,
       frame: false,
       transparent: true,
-      skipTaskbar: true,
+      skipTaskbar,
+      type,
       show: false,
-      movable: false,
+      movable: false, // moveable and resizeable might be redundant as there is no frame for the user to interact with
       resizable: false,
       useContentSize: true,
       webPreferences: {

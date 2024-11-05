@@ -23,8 +23,8 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "dependencies": {
+    "@jitsi/robotjs": "^0.6.13",
     "electron-squirrel-startup": "^1.0.1",
-    "robotjs": "^0.6.0",
     "update-electron-app": "^3.0.0"
   },
   "devDependencies": {
