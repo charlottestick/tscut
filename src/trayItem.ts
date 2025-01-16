@@ -15,11 +15,7 @@ export class TrayItem {
   constructor() {
     // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
     let icon: string;
-    if (app.isPackaged) {
-      icon = join(app.getAppPath(), '.webpack/main', iconUrl)
-    } else {
-      icon = 'src/icons/jumpcut blue icon 32.png';
-    }
+    icon = join(app.getAppPath(), '.webpack/main', iconUrl);
 
     this.trayItem = new Tray(icon);
     let tooltip = app.isPackaged ? 'tscut' : 'tscut [dev]';
@@ -28,29 +24,15 @@ export class TrayItem {
       this.trayItem.popUpContextMenu();
     });
 
-    this.menu = Menu.buildFromTemplate([
-      {
-        label: 'Exit tscut',
-        click: () => {
-          this.trayItem.destroy();
-          app.releaseSingleInstanceLock();
-          app.setLoginItemSettings({ openAtLogin: false });
-          app.quit();
-        },
-      },
-    ]);
-
-    this.trayItem.setContextMenu(this.menu);
+    this.menu = new Menu();
   }
 
-  createDebugMenu(debugMenu: MenuItemConstructorOptions[]): void {
-    if (app.isPackaged) {
-      return;
-    }
-
-    debugMenu.forEach((template, index) => {
+  createMenu(menu: MenuItemConstructorOptions[]): void {
+    menu.forEach((template, index) => {
       const menuItem = new MenuItem(template);
       this.menu.insert(index, menuItem);
     });
+
+    this.trayItem.setContextMenu(this.menu);
   }
 }

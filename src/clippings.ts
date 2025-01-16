@@ -1,4 +1,4 @@
-import { app, safeStorage } from 'electron';
+import { app } from 'electron';
 import fs from 'node:fs';
 
 export class Clipping {
@@ -21,7 +21,7 @@ export class Clipping {
 
 class ClippingStore {
   private clippings: Clipping[] = [];
-  private _maxStoreLength: number = 30;
+  private _maxStoreLength: number = 20;
   persistPath: string;
   debugPersistPath: string;
 
@@ -35,6 +35,7 @@ class ClippingStore {
     return this._maxStoreLength;
   }
 
+  // Expose changing store length in menu?
   set maxStoreLength(value: number) {
     const valueOrMin = value < 10 ? 10 : value;
     this._maxStoreLength = valueOrMin;
@@ -107,20 +108,9 @@ class ClippingStore {
       return;
     }
 
-    const plaintextStore: string = JSON.stringify(this.clippings);
+    const stringifiedStore: string = JSON.stringify(this.clippings);
 
-    let encryptedStore: Buffer;
-    try {
-      encryptedStore = safeStorage.encryptString(plaintextStore);
-    } catch (e) {
-      console.log(
-        'Persistent clipping store encryption failed: ',
-        (e as Error).message
-      );
-      return;
-    }
-
-    fs.writeFile(path, encryptedStore, (err) => {
+    fs.writeFile(path, stringifiedStore, { encoding: 'utf8' }, (err) => {
       if (err) {
         console.log('Persistent clipping store write failed: ', err.message);
       }
@@ -130,64 +120,21 @@ class ClippingStore {
   private readPersistentStore(useDebugStore: boolean = false): void {
     const path = useDebugStore ? this.debugPersistPath : this.persistPath;
 
-    fs.readFile(path, (err, encryptedStore: Buffer) => {
+    fs.readFile(path, { encoding: 'utf8' }, (err, persistentStore: string) => {
       try {
         if (err) {
           throw err;
         }
 
-        if (encryptedStore.length === 0) {
+        if (persistentStore.length === 0) {
           return;
         }
 
-        const plaintextStore: string =
-          safeStorage.decryptString(encryptedStore);
-        this.clippings = JSON.parse(plaintextStore);
+        this.clippings = JSON.parse(persistentStore);
         this.limitLength();
       } catch (e) {
         console.log(
           'Persistent clipping store read failed: ',
-          (e as Error).message
-        );
-      }
-    });
-  }
-
-  decryptPersistentStore(useDebugStore: boolean = false): void {
-    if (app.isPackaged) {
-      return;
-    }
-
-    const path = useDebugStore ? this.debugPersistPath : this.persistPath;
-
-    fs.readFile(path, (err, encryptedStore: Buffer) => {
-      try {
-        if (err) {
-          throw err;
-        }
-
-        if (encryptedStore.length === 0) {
-          return;
-        }
-
-        const plaintextStore: string =
-          safeStorage.decryptString(encryptedStore);
-        const prettyJson = JSON.stringify(JSON.parse(plaintextStore), null, 2);
-
-        const decryptedStorePath =
-          app.getAppPath() + '/decryptedClippingStore.json';
-
-        fs.writeFile(decryptedStorePath, prettyJson, (err) => {
-          if (err) {
-            console.log(
-              'Decrypted persistent clipping store write failed: ',
-              err.message
-            );
-          }
-        });
-      } catch (e) {
-        console.log(
-          'Persistent clipping store decryption failed: ',
           (e as Error).message
         );
       }
@@ -209,6 +156,7 @@ class ClippingStore {
   }
 }
 
+// Could we have multiple clipping stacks/stores for keeping workspaces separate?
 export class ClippingStack {
   store: ClippingStore;
   position: number = 0;
