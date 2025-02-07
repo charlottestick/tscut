@@ -98,6 +98,14 @@ export class Tscut {
           this.stack.wrapAround = menuItem.checked;
         },
       },
+      {
+        label: 'Move selection to top',
+        type: 'checkbox',
+        checked: true,
+        click: (menuItem) => {
+          this.interactions.moveSelectionToTop = menuItem.checked;
+        }
+      },
       { type: 'separator' },
       {
         label: 'About',

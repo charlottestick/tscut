@@ -7,6 +7,7 @@ export class Interactions {
   private stack: ClippingStack;
   private bezel: Bezel;
   private clipboard: Clipboard;
+  moveSelectionToTop: boolean = true;
 
   constructor(inputs: {
     stack: ClippingStack;
@@ -52,6 +53,10 @@ export class Interactions {
       case 'Enter':
         this.bezelSelection();
         break;
+      case 'Insert':
+      case 'Home':
+        this.bezelSelection(false);
+        break;
       case 'Delete':
         this.stack.delete();
         if (this.stack.isEmpty()) {
@@ -77,16 +82,19 @@ export class Interactions {
     }, 200);
   }
 
-  bezelSelection(): void {
-    this.stack.moveItemToTop(this.stack.position);
-    this.stack.position = 0;
+  bezelSelection(pasteSelection: boolean = true): void {
+    if (this.moveSelectionToTop) {
+      this.stack.moveItemToTop(this.stack.position);
+      this.stack.position = 0;
+    }
+
     const clipping = this.stack.itemAt(this.stack.position);
     if (clipping === undefined) {
       this.bezel.hide();
       return;
     }
 
-    this.paste(clipping);
+    pasteSelection ? this.paste(clipping) : this.place(clipping);
   }
 
   displayBezelAtPosition(position: number): void {
