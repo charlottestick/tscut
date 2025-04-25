@@ -2,7 +2,7 @@ import { app } from 'electron';
 import { updateElectronApp } from 'update-electron-app';
 import path from 'node:path';
 import { Tscut } from './tscut';
-import iconUrl from './icons/jumpcut blue icon 32.png';
+import iconUrl from './icons/jumpcut blue icon 256.png';
 
 if (process.platform === 'win32') {
   // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -29,6 +29,12 @@ if (process.platform === 'win32') {
         '--process-start-args',
         '"--hidden"',
       ],
+    });
+  }
+} else if (process.platform === 'darwin') {
+  if (app.isPackaged && !app.getLoginItemSettings().openAtLogin) {
+    app.setLoginItemSettings({
+      openAtLogin: true,
     });
   }
 }

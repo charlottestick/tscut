@@ -1,11 +1,10 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerDeb } from '@electron-forge/maker-deb';
-import { MakerRpm } from '@electron-forge/maker-rpm';
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
-
+import { MakerDMG } from '@electron-forge/maker-dmg';
 import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
 
@@ -13,11 +12,21 @@ const config: ForgeConfig = {
   packagerConfig: {
     asar: false,
     icon: 'src/icons/jumpcut blue icon',
+    name: 'tscut',
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({ setupIcon: 'src/icons/jumpcut blue icon.ico', setupExe: 'tscut-setup.exe' }),
-    new MakerDeb({ options: { icon: 'src/icons/jumpcut blue icon 256.png', categories: ['Utility', 'Development'] }}),
+    new MakerSquirrel({
+      setupIcon: 'src/icons/jumpcut blue icon.ico',
+      setupExe: 'tscut-setup.exe',
+    }),
+    new MakerDeb({
+      options: {
+        icon: 'src/icons/jumpcut blue icon 256.png',
+        categories: ['Utility', 'Development'],
+      },
+    }),
+    new MakerDMG({ icon: 'src/icons/jumpcut blue icon.icns' }),
   ],
   publishers: [
     {
@@ -47,6 +56,7 @@ const config: ForgeConfig = {
           },
         ],
       },
+      loggerPort: 9001,
     }),
     // Fuses are used to enable/disable various Electron functionality
     // at package time, before code signing the application
@@ -62,4 +72,3 @@ const config: ForgeConfig = {
 };
 
 export default config;
-

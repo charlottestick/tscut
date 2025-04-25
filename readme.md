@@ -1,6 +1,6 @@
 # tscut
 
-A windows & linux clipboard manager based on Jumpcut & Flycut
+A crossplatform clipboard manager based on Jumpcut & Flycut
 
 ![image](./tscut.png)
 
@@ -17,3 +17,6 @@ It may need to be scanned by your anti-virus software and could show an error wh
 
 ### Linux
 Download the .deb file and run it
+
+### MacOS
+Download the .dmg file, open it and drag the app into the applications folder

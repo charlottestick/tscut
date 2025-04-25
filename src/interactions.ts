@@ -55,9 +55,12 @@ export class Interactions {
         break;
       case 'Insert':
       case 'Home':
+      case '=':
         this.bezelSelection(false);
         break;
       case 'Delete':
+      case 'Backspace':
+      case '-':
         this.stack.delete();
         if (this.stack.isEmpty()) {
           this.bezel.hide();
