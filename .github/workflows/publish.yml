@@ -1,4 +1,4 @@
-name: Publish tscut
+run-name: Publish tscut ${{ github.ref_name }}
 on:
   push:
     tags:
