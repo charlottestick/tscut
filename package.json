@@ -20,7 +20,7 @@
     "build": "electron-forge package",
     "make": "electron-forge make",
     "publish": "dotenv -- electron-forge publish",
-    "publish:ci": "git push origin --tags",
+    "publish:ci": "git push && git push origin --tags",
     "version:major": "npm version major && npm run publish:ci",
     "version:minor": "npm version minor && npm run publish:ci",
     "version:patch": "npm version patch && npm run publish:ci",
