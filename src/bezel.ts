@@ -24,7 +24,7 @@ export class Bezel {
         type = 'dock';
         break;
       case 'darwin':
-        app.dock.hide();
+        app.dock?.hide();
         break;
     }
 
@@ -72,7 +72,7 @@ export class Bezel {
     } else {
       // On mac, minimise doesn't return focus AND it shows the window in the dock
       // Instead we hide the whole app which fixes both problems
-      // this.bezel.hide();
+      this.bezel.hide();
       app.hide();
     }
     this.shown = false;

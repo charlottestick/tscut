@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "electron-forge start",
     "start": "npm run dev",
-    "package": "electron-forge package",
+    "build": "electron-forge package",
     "make": "electron-forge make",
     "publish": "dotenv -- electron-forge publish",
     "publish:ci": "git push origin --tags",

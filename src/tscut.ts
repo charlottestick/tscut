@@ -104,12 +104,13 @@ export class Tscut {
         checked: true,
         click: (menuItem) => {
           this.interactions.moveSelectionToTop = menuItem.checked;
-        }
+        },
       },
       { type: 'separator' },
       {
         label: 'About',
         click: () => {
+          app.show();
           app.showAboutPanel();
         },
       },
@@ -123,7 +124,9 @@ export class Tscut {
       {
         label: 'Exit tscut',
         click: () => {
-          app.setLoginItemSettings({ openAtLogin: false });
+          if (process.platform === 'win32') {
+            app.setLoginItemSettings({ openAtLogin: false });
+          }
           this.quit();
         },
       },
