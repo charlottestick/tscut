@@ -20,6 +20,10 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "dotenv -- electron-forge publish",
+    "publish:ci": "git push origin --tags",
+    "major": "npm version major && npm run publish:ci",
+    "minor": "npm version minor && npm run publish:ci",
+    "patch": "npm version patch && npm run publish:ci",
     "lint": "eslint --ext .ts,.tsx ."
   },
   "dependencies": {
