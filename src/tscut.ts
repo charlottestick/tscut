@@ -110,7 +110,9 @@ export class Tscut {
       {
         label: 'About',
         click: () => {
-          app.show();
+          if (process.platform === 'darwin') {
+            app.show();
+          }
           app.showAboutPanel();
         },
       },
