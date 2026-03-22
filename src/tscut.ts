@@ -54,6 +54,8 @@ export class Tscut {
       return;
     }
 
+    console.log(`Node version: ${process.version}`);
+
     this.trayItem.createMenu([
       {
         label: 'Debug',
@@ -79,6 +81,18 @@ export class Tscut {
             label: 'Show',
             click: () => {
               this.bezel.show();
+            },
+          },
+          {
+            label: 'Hide',
+            click: () => {
+              this.bezel.hide();
+            },
+          },
+          {
+            label: 'Open dev tools',
+            click: () => {
+              this.bezel.openDevTools();
             },
           },
         ],

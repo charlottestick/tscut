@@ -88,8 +88,14 @@ export class Bezel {
   }
 
   setKeyHandler(
-    handler: (event: Electron.Event, input: Electron.Input) => void
+    handler: (event: Electron.Event, input: Electron.Input) => void,
   ): void {
     this.bezel.webContents.on('before-input-event', handler);
+  }
+
+  openDevTools(): void {
+    if (!this.bezel.webContents.isDevToolsOpened()) {
+      this.bezel.webContents.openDevTools({ mode: 'detach' });
+    }
   }
 }
