@@ -1,6 +1,7 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerDeb } from '@electron-forge/maker-deb';
+import { MakerRpm } from '@electron-forge/maker-rpm';
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
@@ -21,6 +22,12 @@ const config: ForgeConfig = {
       setupExe: 'tscut-setup.exe',
     }),
     new MakerDeb({
+      options: {
+        icon: 'src/icons/jumpcut blue icon 256.png',
+        categories: ['Utility', 'Development'],
+      },
+    }),
+    new MakerRpm({
       options: {
         icon: 'src/icons/jumpcut blue icon 256.png',
         categories: ['Utility', 'Development'],
