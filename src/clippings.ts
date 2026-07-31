@@ -5,7 +5,7 @@ export class Clipping {
   fullText: string;
   shortenedText: string;
 
-  constructor(text: string, length: number = 80) {
+  constructor(text: string, length = 80) {
     this.fullText = text;
     this.shortenedText = text.trim();
     this.shortenedText = this.shortenedText.split('/n')[0];
@@ -21,7 +21,7 @@ export class Clipping {
 
 class ClippingStore {
   private clippings: Clipping[] = [];
-  private _maxStoreLength: number = 20;
+  private _maxStoreLength = 20;
   persistPath: string;
   debugPersistPath: string;
 
@@ -101,7 +101,7 @@ class ClippingStore {
     return slice;
   }
 
-  private persistStore(useDebugStore: boolean = false): void {
+  private persistStore(useDebugStore = false): void {
     const path = useDebugStore ? this.debugPersistPath : this.persistPath;
 
     if (this.length === 0) {
@@ -117,7 +117,7 @@ class ClippingStore {
     });
   }
 
-  private readPersistentStore(useDebugStore: boolean = false): void {
+  private readPersistentStore(useDebugStore = false): void {
     const path = useDebugStore ? this.debugPersistPath : this.persistPath;
 
     fs.readFile(path, { encoding: 'utf8' }, (err, persistentStore: string) => {
@@ -141,7 +141,7 @@ class ClippingStore {
     });
   }
 
-  resetPersistentStore(useDebugStore: boolean = false): void {
+  resetPersistentStore(useDebugStore = false): void {
     if (app.isPackaged) {
       return;
     }
@@ -159,8 +159,8 @@ class ClippingStore {
 // Could we have multiple clipping stacks/stores for keeping workspaces separate?
 export class ClippingStack {
   store: ClippingStore;
-  position: number = 0;
-  wrapAround: boolean = true;
+  position = 0;
+  wrapAround = true;
 
   constructor() {
     this.store = new ClippingStore();

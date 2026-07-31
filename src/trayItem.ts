@@ -14,11 +14,10 @@ export class TrayItem {
 
   constructor() {
     // Create an item in the notification tray area so we can exit the app once the dock/taskbar item is removed
-    let icon: string;
-    icon = join(app.getAppPath(), '.webpack/main', iconUrl);
+    const icon = join(app.getAppPath(), '.webpack/main', iconUrl);
 
     this.trayItem = new Tray(icon);
-    let tooltip = app.isPackaged ? 'tscut' : 'tscut [dev]';
+    const tooltip = app.isPackaged ? 'tscut' : 'tscut [dev]';
     this.trayItem.setToolTip(tooltip);
     this.trayItem.addListener('click', () => {
       this.trayItem.popUpContextMenu();

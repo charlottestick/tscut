@@ -2,10 +2,10 @@ import { clipboard } from 'electron';
 import { keyTap, setKeyboardDelay } from '@jitsi/robotjs';
 
 export class Clipboard {
-  private interval: number = 500;
+  private interval = 500;
   private changeCallback: () => void;
   private commandOrControl: string;
-  item: string = '';
+  item = '';
 
   constructor(changeCallback: () => void) {
     this.changeCallback = changeCallback;
@@ -19,7 +19,7 @@ export class Clipboard {
   }
 
   private pollClipboard(): void {
-    let item = clipboard.readText();
+    const item = clipboard.readText();
     if (item !== this.item && item.trim().length !== 0) {
       this.item = item;
       this.changeCallback();

@@ -9,8 +9,8 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 export class Bezel {
   private bezel: BrowserWindow;
-  shown: boolean = false;
-  hideOnBlur: boolean = true;
+  shown = false;
+  hideOnBlur = true;
 
   constructor() {
     // Handle running in the background with no taskbar item for different platforms

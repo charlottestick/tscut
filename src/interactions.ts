@@ -7,7 +7,7 @@ export class Interactions {
   private stack: ClippingStack;
   private bezel: Bezel;
   private clipboard: Clipboard;
-  moveSelectionToTop: boolean = true;
+  moveSelectionToTop = true;
 
   constructor(inputs: {
     stack: ClippingStack;
@@ -85,7 +85,7 @@ export class Interactions {
     }, 200);
   }
 
-  bezelSelection(pasteSelection: boolean = true): void {
+  bezelSelection(pasteSelection = true): void {
     if (this.moveSelectionToTop) {
       this.stack.moveItemToTop(this.stack.position);
       this.stack.position = 0;
@@ -97,6 +97,7 @@ export class Interactions {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     pasteSelection ? this.paste(clipping) : this.place(clipping);
   }
 

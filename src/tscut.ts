@@ -54,7 +54,6 @@ export class Tscut {
 
   addDebugMenu(): void {
     console.log(`Node version: ${process.version}\n`);
-    this.bezel.openDevTools();
 
     this.trayItem.createMenu([
       {
