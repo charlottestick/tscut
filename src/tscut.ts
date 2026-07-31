@@ -22,7 +22,10 @@ export class Tscut {
 
     this.trayItem = new TrayItem();
     this.addMenu();
-    this.addDebugMenu();
+
+    if (!app.isPackaged) {
+      this.addDebugMenu();
+    }
 
     this.interactions = new Interactions({
       stack: this.stack,
@@ -50,11 +53,8 @@ export class Tscut {
   }
 
   addDebugMenu(): void {
-    if (app.isPackaged) {
-      return;
-    }
-
-    console.log(`Node version: ${process.version}`);
+    console.log(`Node version: ${process.version}\n`);
+    this.bezel.openDevTools();
 
     this.trayItem.createMenu([
       {
